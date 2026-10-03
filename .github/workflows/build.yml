@@ -1,0 +1,34 @@
+name: build
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  windows-x64:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Rust (stable, msvc)
+        shell: pwsh
+        run: |
+          rustup toolchain install stable --profile minimal
+          rustup default stable
+          rustup target add x86_64-pc-windows-msvc
+          rustc --version
+
+      - name: Build
+        run: cargo build --release --target x86_64-pc-windows-msvc
+
+      - name: Collect artifacts
+        shell: cmd
+        run: |
+          mkdir dist
+          copy target\x86_64-pc-windows-msvc\release\BonDriver_Mirakurun.dll dist\
+          copy BonDriver_Mirakurun.ini dist\
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BonDriver_Mirakurun-bigbuf-windows-x64
+          path: dist/
