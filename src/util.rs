@@ -20,7 +20,8 @@ pub const SPACE_NUM: usize = 8;
 
 /// 受信バッファに保持するTSチャンク数の上限。
 /// 元実装の ASYNCBUFFSIZE = 0x200000 / TSDATASIZE * 2 と同等。
-pub const ASYNCBUFFSIZE: usize = (0x0020_0000 / TSDATASIZE) * 2;
+// 2026-10-03: 8K (~11MB/s) 向けに枠数を 32 倍へ拡大 (2788 枠。満杯時で最大約128MB、8Kで数秒分以上)。
+pub const ASYNCBUFFSIZE: usize = (0x0400_0000 / TSDATASIZE) * 2;
 
 /// ビットレート計算間隔(ms)。
 pub const BITRATE_CALC_TIME_MS: u128 = 500;
